@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum userRoles {
+  ADMIN
+  USER 
+  BARBER
+}
+
+model User {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  email String @unique
+  password String
+  age Int
+  role userRoles @default(USER)
+  resetToken String?
+  resetExpiredToken DateTime?
+  order Order[] @relation("user-order")
+  created_At DateTime @default(now())
+  updated_At DateTime @updatedAt
+
+  @@map("Users-")
+}
+
+enum orderStatus {
+  PEDDING
+  APPROVED
+  DENIED
+}
+
+model Order {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  description String
+  fone String
+  observations String?
+  status orderStatus @default(PEDDING)
+  user User @relation("user-order", fields: [userId], references: [id])
+  userId String @db.ObjectId
+  timeOrder DateTime @default(now())
+  updated_At DateTime @updatedAt
+
+  @@map("Order-")
+}
