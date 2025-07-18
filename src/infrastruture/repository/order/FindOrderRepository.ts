@@ -3,9 +3,9 @@ import { Order } from "../../../domain/entities/order/Order";
 import { prismaClient } from "../../prisma/db";
 
 export class FindOrderRepository implements IFindOrderRepositories {
-  async findOrder(userId: string): Promise<Order | null> {
+  async findOrder(id: string): Promise<Order | null> {
     const order = await prismaClient.order.findFirst({
-      where: { userId },
+      where: { id },
     });
 
     if (!order) {

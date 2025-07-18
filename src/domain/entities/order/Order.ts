@@ -1,4 +1,4 @@
-type orderStatus = "PEDDING" | "APPROVED" | "DENIED";
+export type orderStatus = "PEDDING" | "APPROVED" | "DENIED";
 
 export class Order {
   public id?: string;

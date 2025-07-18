@@ -23,6 +23,7 @@ model User {
   resetToken String?
   resetExpiredToken DateTime?
   order Order[] @relation("user-order")
+  log log[] @relation("user-order-log")
   created_At DateTime @default(now())
   updated_At DateTime @updatedAt
 
@@ -42,9 +43,26 @@ model Order {
   observations String?
   status orderStatus @default(PEDDING)
   user User @relation("user-order", fields: [userId], references: [id])
-  userId String @db.ObjectId
+  userId String @db.ObjectId @unique
+  log log[] @relation("order-log")
   timeOrder DateTime @default(now())
   updated_At DateTime @updatedAt
 
   @@map("Order-")
+}
+
+model log {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  action String
+  details String
+  order Order @relation("order-log", fields: [orderId], references: [id] )
+  orderId String @db.ObjectId
+  user User @relation("user-order-log", fields: [userId], references: [id])
+  userId String @db.ObjectId
+  admin String
+  observations String?
+  created_At DateTime @default(now())
+  updated_At DateTime @updatedAt
+
+  @@map("log-")
 }
