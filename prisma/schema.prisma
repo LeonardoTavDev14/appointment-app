@@ -23,6 +23,7 @@ model User {
   resetToken String?
   resetExpiredToken DateTime?
   order Order[] @relation("user-order")
+  store Store[] @relation("user-barber")
   created_At DateTime @default(now())
   updated_At DateTime @updatedAt
 
@@ -60,4 +61,19 @@ model log {
   updated_At DateTime @updatedAt
 
   @@map("log-")
+}
+
+model Store {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  businessFone String
+  cep String
+  address String
+  cnpj String?
+  user User @relation("user-barber", fields: [userId], references: [id])
+  userId String @db.ObjectId @unique
+  created_At DateTime @default(now())
+  updated_At DateTime @updatedAt
+
+  @@map("Store-")
 }
