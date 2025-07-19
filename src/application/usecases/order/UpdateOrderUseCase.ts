@@ -18,14 +18,14 @@ export class UpdateOrderUseCase {
       throw new Error("Order not found!");
     }
 
-    if (order.status === data.newStatus) {
-      if (data.newStatus === "APPROVED") {
-        throw new Error("Order already approved!");
-      }
+    if (order.status === "APPROVED" || order.status === "DENIED") {
+      throw new Error(
+        "You cannot edit an order that has already been approved or denied!"
+      );
+    }
 
-      if (data.newStatus === "DENIED") {
-        throw new Error("Order already denied!");
-      }
+    if (order.status === data.newStatus) {
+      throw new Error("You cannot change the order status to the same status");
     }
 
     const updated = new Order(
@@ -40,7 +40,6 @@ export class UpdateOrderUseCase {
     await this.createLogRepository.create({
       action: `ORDER_${data.newStatus}_ACTION`,
       details: `Changing order status: ${data.newStatus} `,
-      orderId: order.id as string,
       userId: order.userId,
       admin: data.admin,
       observations: `No comments!`,

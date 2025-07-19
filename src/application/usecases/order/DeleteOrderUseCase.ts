@@ -24,10 +24,9 @@ export class DeleteOrderUseCase {
     }
 
     await this.createLogRepository.create({
-      action: "ORDER_DENIED_DELETED",
+      action: `ORDER_DELETE_${order.status}`,
       details: "Request denied, therefore removing from the database!",
-      orderId: order.id as string,
-      userId: order.userId as string,
+      userId: order.userId,
       admin: data.admin,
       observations:
         "Removing request due to lack of veracity of information provided with the request for the new barber position",

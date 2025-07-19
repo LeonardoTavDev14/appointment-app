@@ -8,7 +8,6 @@ export class CreateLogRepository implements ICreateLogRepositories {
       data: {
         action: log.action,
         details: log.details,
-        orderId: log.orderId,
         userId: log.userId,
         admin: log.admin,
         observations: log.observations,
@@ -18,7 +17,6 @@ export class CreateLogRepository implements ICreateLogRepositories {
     return new Log(
       created.action,
       created.details,
-      created.orderId,
       created.userId,
       created.admin,
       created.observations,
