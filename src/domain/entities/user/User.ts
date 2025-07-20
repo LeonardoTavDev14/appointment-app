@@ -44,4 +44,30 @@ export class User {
       existing.resetExpiredToken
     );
   }
+
+  static updatePassword(existing: User, updates: Partial<User>): User {
+    return new User(
+      existing.name,
+      updates.email ?? existing.email,
+      existing.password,
+      existing.age,
+      existing.role,
+      existing.id,
+      updates.resetToken ?? existing.resetToken,
+      updates.resetExpiredToken ?? existing.resetExpiredToken
+    );
+  }
+
+  static updateResetPassword(existing: User, newPasswordHash: string): User {
+    return new User(
+      existing.name,
+      existing.email,
+      newPasswordHash,
+      existing.age,
+      existing.role,
+      existing.id,
+      null,
+      null
+    );
+  }
 }

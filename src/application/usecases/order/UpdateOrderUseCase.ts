@@ -18,6 +18,7 @@ export class UpdateOrderUseCase {
       throw new Error("Order not found!");
     }
 
+    // REVISAR DEPOIS PARA VER SE É REALMENTE UTIL ESTÁ VALIDAÇÃO PARA A EXPERIÊNCIA DO USUÁRIO/ADMIN/BARBER UX UI
     if (order.status === "APPROVED" || order.status === "DENIED") {
       throw new Error(
         "You cannot edit an order that has already been approved or denied!"
