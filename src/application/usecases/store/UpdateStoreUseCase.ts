@@ -27,11 +27,20 @@ export class UpdateStoreUseCase {
       throw new Error("This name and cep already exists!");
     }
 
+    if (store.operation === data.newOperation) {
+      throw new Error(
+        "It is not possible to change to the same operating status!"
+      );
+    }
+
     const updated = Store.updateForm(store, {
       name: data.name,
       businessFone: data.businessFone,
       cep: data.cep,
       address: data.address,
+      operation: data.newOperation,
+      openingHours: data.openingHours,
+      closingTime: data.closingTime,
     });
 
     await this.updateStoreRepositories.update(updated);

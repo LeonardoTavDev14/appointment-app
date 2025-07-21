@@ -34,6 +34,9 @@ export class CreateStoreUseCase {
       data.businessFone,
       data.cep,
       data.address,
+      "OPEN",
+      data.openingHours,
+      data.closingTime,
       data.userId,
       data.cnpj
     );

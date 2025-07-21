@@ -13,6 +13,9 @@ export class UpdateStoreRepository implements IUpdateStoreRepositories {
         businessFone: store.businessFone,
         cep: store.cep,
         address: store.address,
+        operation: store.operation,
+        openingHours: store.openingHours,
+        closingTime: store.closingTime,
       },
     });
   }

@@ -19,6 +19,9 @@ export class FindNameCepStoreRepository
       store.businessFone,
       store.cep,
       store.address,
+      store.operation,
+      store.openingHours,
+      store.closingTime,
       store.userId,
       store.cnpj,
       store.id

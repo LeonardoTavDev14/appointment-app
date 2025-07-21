@@ -8,7 +8,15 @@ import { UpdateStoreUseCase } from "../../../application/usecases/store/UpdateSt
 export class UpdateStoreController {
   async handle(request: Request, response: Response) {
     const { id } = request.params;
-    const { name, businessFone, cep, address } = request.body;
+    const {
+      name,
+      businessFone,
+      cep,
+      address,
+      newOperation,
+      openingHours,
+      closingTime,
+    } = request.body;
 
     const findByIdStoreRepository = new FindByIdStoreRepository();
     const findNameCepStoreRepository = new FindNameCepStoreRepository();
@@ -21,7 +29,16 @@ export class UpdateStoreController {
     );
 
     try {
-      await useCase.execute({ id, name, businessFone, cep, address });
+      await useCase.execute({
+        id,
+        name,
+        businessFone,
+        cep,
+        address,
+        newOperation,
+        openingHours,
+        closingTime,
+      });
 
       return response.status(200).json({
         message: "Store information has been changed successfully!",

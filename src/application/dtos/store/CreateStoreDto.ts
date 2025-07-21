@@ -3,6 +3,8 @@ export interface ICreateStoreDTO {
   businessFone: string;
   cep: string;
   address: string;
+  openingHours: string;
+  closingTime: string;
   userId: string;
   cnpj?: string | null;
 }

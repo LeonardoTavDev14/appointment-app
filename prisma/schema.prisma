@@ -63,14 +63,22 @@ model log {
   @@map("log-")
 }
 
+enum operationStatus {
+  OPEN 
+  CLOSE
+}
+
 model Store {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   name String
   businessFone String
   cep String
   address String
+  operation operationStatus @default(OPEN)
+  openingHours String
+  closingTime String
   cnpj String?
-  user User @relation("user-barber", fields: [userId], references: [id])
+  user User @relation("user-barber", fields: [userId], references: [id], onDelete: Cascade)
   userId String @db.ObjectId @unique
   created_At DateTime @default(now())
   updated_At DateTime @updatedAt

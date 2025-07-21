@@ -18,6 +18,6 @@ export const ensureRole = (...roles: allowedRoles[]) => {
       });
     }
 
-    next();
+    return next();
   };
 };

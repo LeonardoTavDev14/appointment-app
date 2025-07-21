@@ -8,7 +8,15 @@ import { CreateStoreUseCase } from "../../../application/usecases/store/CreateSt
 export class CreateStoreController {
   async handle(request: Request, response: Response) {
     const userId = request.user.id;
-    const { name, businessFone, cep, address, cnpj } = request.body;
+    const {
+      name,
+      businessFone,
+      cep,
+      address,
+      cnpj,
+      openingHours,
+      closingTime,
+    } = request.body;
 
     const findNameCepStoreRepository = new FindNameCepStoreRepository();
     const findUserIdStoreRepository = new FindUserIdStoreRepository();
@@ -26,6 +34,8 @@ export class CreateStoreController {
         businessFone,
         cep,
         address,
+        openingHours,
+        closingTime,
         userId,
         cnpj,
       });

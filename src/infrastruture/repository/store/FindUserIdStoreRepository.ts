@@ -17,6 +17,9 @@ export class FindUserIdStoreRepository implements IFindUserIdStoreRepositories {
       userStored.businessFone,
       userStored.cep,
       userStored.address,
+      userStored.operation,
+      userStored.openingHours,
+      userStored.closingTime,
       userStored.userId,
       userStored.cnpj,
       userStored.id
