@@ -10,7 +10,7 @@ export const ensureJoi = (
 
     if (result.error) {
       return response.status(400).json({
-        message: `Error detected: ${result.error}`,
+        message: `Error detected:`,
         errors: result.error.details.map((erro) => erro.message),
       });
     }
