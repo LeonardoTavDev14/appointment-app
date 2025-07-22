@@ -70,4 +70,17 @@ export class User {
       null
     );
   }
+
+  static updateRole(existing: User, newRole: userRoles): User {
+    return new User(
+      existing.name,
+      existing.email,
+      existing.password,
+      existing.age,
+      newRole,
+      existing.id,
+      existing.resetToken,
+      existing.resetExpiredToken
+    );
+  }
 }

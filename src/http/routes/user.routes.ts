@@ -10,6 +10,7 @@ import { UpdateUserController } from "../controllers/user/UpdateUserController";
 import { DeleteUserController } from "../controllers/user/DeleteUserController";
 import { ChangePasswordUserController } from "../controllers/user/ChangePasswordUserController";
 import { ResetPasswordUserController } from "../controllers/user/ResetPasswordUserController";
+import { UpdateRoleUserController } from "../controllers/user/UpdateRoleUserController";
 
 const routes = Router();
 
@@ -20,6 +21,7 @@ const updateUserController = new UpdateUserController();
 const deleteUserController = new DeleteUserController();
 const changePasswordUserController = new ChangePasswordUserController();
 const resetPasswordUserController = new ResetPasswordUserController();
+const updateRoleUserController = new UpdateRoleUserController();
 
 routes.post("/created", createUserController.handle);
 routes.post("/login", authUserController.handle);
@@ -34,6 +36,12 @@ routes.get(
 
 routes.put("/updated", ensureAuthenticated, updateUserController.handle);
 routes.put("/reset-password/:token", resetPasswordUserController.handle);
+routes.put(
+  "/updated-role/:id",
+  ensureAuthenticated,
+  ensureRole("ADMIN"),
+  updateRoleUserController.handle
+);
 
 routes.delete("/deleted", ensureAuthenticated, deleteUserController.handle);
 

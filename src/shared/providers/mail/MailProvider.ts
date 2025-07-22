@@ -11,7 +11,7 @@ export class MailProvider implements IMailProvider {
       from: process.env.AUTH_USER,
       to: email,
       subject: "Password reset",
-      text: "Click the link/button below to change your password",
+      text: "Click the link below to change your password",
       html: `<body style="font-family: 'Poppins', Arial, sans-serif; margin: 0; padding: 20px; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; box-sizing: border-box;">
       <div style="background-color: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); width: 100%; max-width: 500px; box-sizing: border-box; text-align: center;">
           <h1 style="color: #2c3e50; font-size: 28px; margin-bottom: 25px;">Esqueceu sua senha?</h1>
