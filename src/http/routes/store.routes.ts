@@ -2,6 +2,11 @@ import { Router } from "express";
 
 import { ensureAuthenticated } from "../middlewares/ensureAuthenticated";
 import { ensureRole } from "../middlewares/ensureRole";
+import { ensureStore } from "../middlewares/ensureStore";
+import { ensureJoi } from "../middlewares/ensureJoi";
+
+import { RequestParamsValidator } from "../validators/RequestParamsValidator";
+import { CreateLogValidator } from "../validators/log/CreateLogValidator";
 
 import { CreateStoreController } from "../controllers/store/CreateStoreController";
 import { UpdateStoreController } from "../controllers/store/UpdateStoreController";
@@ -23,6 +28,7 @@ routes.post(
   "/created",
   ensureAuthenticated,
   ensureRole("ADMIN", "BARBER"),
+  ensureStore,
   createStoreController.handle
 );
 
@@ -33,6 +39,8 @@ routes.put(
   "/updated/:id",
   ensureAuthenticated,
   ensureRole("ADMIN", "BARBER"),
+  ensureJoi(RequestParamsValidator, "params"),
+  ensureStore,
   updateStoreController.handle
 );
 
@@ -40,12 +48,15 @@ routes.delete(
   "/deleted",
   ensureAuthenticated,
   ensureRole("ADMIN", "BARBER"),
+  ensureJoi(CreateLogValidator, "body"),
   deleteStoreUserController.handle
 );
 routes.delete(
   "/deleted/:id",
   ensureAuthenticated,
   ensureRole("ADMIN"),
+  ensureJoi(RequestParamsValidator, "params"),
+  ensureJoi(CreateLogValidator, "body"),
   deleteStoreAdminController.handle
 );
 

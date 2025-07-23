@@ -23,6 +23,7 @@ export class DeleteOrderUseCase {
       );
     }
 
+    // ARRUMAR LOGS PARA DETAILLS, OBSERVATION VIM DO REQUEST.BODY!
     await this.createLogRepository.create({
       action: `ORDER_DELETE_${order.status}`,
       details: "Request denied, therefore removing from the database!",
