@@ -80,8 +80,22 @@ model Store {
   cnpj String?
   user User @relation("user-barber", fields: [userId], references: [id], onDelete: Cascade)
   userId String @db.ObjectId @unique
+  service Service[] @relation("store-service")
   created_At DateTime @default(now())
   updated_At DateTime @updatedAt
 
   @@map("Store-")
+}
+
+model Service {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  typeService String
+  prices Float
+  store Store @relation("store-service", fields: [storeId], references: [id])
+  storeId String @db.ObjectId
+  observations String?
+  created_At DateTime @default(now())
+  updated_At DateTime @updatedAt
+
+  @@map("Service-")
 }
