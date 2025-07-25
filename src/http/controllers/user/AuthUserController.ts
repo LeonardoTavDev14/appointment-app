@@ -5,6 +5,8 @@ import { LockAccountUserRepository } from "../../../infrastruture/repository/use
 import { CompareProvider } from "../../../shared/providers/bcrypt/compare/CompareProvider";
 import { SaveUserRepository } from "../../../infrastruture/repository/user/SaveUserRepository";
 import { TokenProvider } from "../../../shared/providers/tokens/jwt/TokenProvider";
+import { DeleteManyRefreshTokenRepository } from "../../../infrastruture/repository/refresh-token/DeleteManyRefreshTokenRepository";
+import { CreateRefreshTokenRepository } from "../../../infrastruture/repository/refresh-token/CreateRefreshTokenRepository";
 
 import { AuthUserUseCase } from "../../../application/usecases/user/AuthUserUseCase";
 
@@ -17,13 +19,18 @@ export class AuthUserController {
     const compareProvider = new CompareProvider();
     const saveUserRepository = new SaveUserRepository();
     const tokenProvider = new TokenProvider();
+    const deleteManyRefreshTokenRepository =
+      new DeleteManyRefreshTokenRepository();
+    const createRefreshTokenRepository = new CreateRefreshTokenRepository();
 
     const useCase = new AuthUserUseCase(
       findEmailUserRepository,
       lockAccountUserRepository,
       compareProvider,
       saveUserRepository,
-      tokenProvider
+      tokenProvider,
+      deleteManyRefreshTokenRepository,
+      createRefreshTokenRepository
     );
 
     try {

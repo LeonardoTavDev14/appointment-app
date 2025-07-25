@@ -20,6 +20,10 @@ export class TokenProvider implements ITokenProvider {
       }
     );
 
-    return { token, name: payloadToken.name };
+    return {
+      token,
+      refresh_token: payloadToken.refresh_token,
+      name: payloadToken.name,
+    };
   }
 }

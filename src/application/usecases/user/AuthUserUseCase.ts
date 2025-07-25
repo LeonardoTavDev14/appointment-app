@@ -7,6 +7,9 @@ import { ILockAccountUserRepositories } from "../../../domain/repositories/user/
 import { ISaveUserRepositories } from "../../../domain/repositories/user/SaveUserRepositories";
 import { User } from "../../../domain/entities/user/User";
 import dayjs from "dayjs";
+import { IDeleteManyRefreshTokenRepositories } from "../../../domain/repositories/refresh-token/DeleteManyRefreshTokenRepositories";
+import { RefreshToken } from "../../../domain/entities/refresh-token/RefreshToken";
+import { ICreateRefreshTokenRepositories } from "../../../domain/repositories/refresh-token/CreateRefreshTokenRepositories";
 
 export class AuthUserUseCase {
   constructor(
@@ -14,7 +17,9 @@ export class AuthUserUseCase {
     private readonly lockAccountUserRepository: ILockAccountUserRepositories,
     private readonly compareProvider: ICompareProvider,
     private readonly saveUserRepository: ISaveUserRepositories,
-    private readonly tokenProvider: ITokenProvider
+    private readonly tokenProvider: ITokenProvider,
+    private readonly deleteManyRefreshTokenRepository: IDeleteManyRefreshTokenRepositories,
+    private readonly createRefreshTokenRepository: ICreateRefreshTokenRepositories
   ) {}
 
   async execute(data: IAuthUserDTO): Promise<IAuthResponseUserDTO> {
@@ -75,10 +80,30 @@ export class AuthUserUseCase {
 
     await this.saveUserRepository.save(updated);
 
-    return await this.tokenProvider.generateToken({
-      id: userAlreadyExists.id as string,
+    await this.deleteManyRefreshTokenRepository.deleteMany(
+      userAlreadyExists.id as string
+    );
+
+    const expiredIn = dayjs().add(7, "day").toDate();
+
+    const refreshToken = new RefreshToken(
+      expiredIn,
+      userAlreadyExists.id as string
+    );
+
+    const refresh = await this.createRefreshTokenRepository.create({
+      expiredIn: refreshToken.expiredIn,
+      userId: refreshToken.userId,
+      id: refreshToken.id,
+    });
+
+    const token = await this.tokenProvider.generateToken({
       role: userAlreadyExists.role,
+      id: userAlreadyExists.id as string,
+      refresh_token: refresh,
       name: userAlreadyExists.name,
     });
+
+    return token;
   }
 }
