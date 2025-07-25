@@ -22,6 +22,8 @@ model User {
   role userRoles @default(USER)
   resetToken String?
   resetExpiredToken DateTime?
+  loginAttempt Int?
+  lockAccount DateTime?
   order Order[] @relation("user-order")
   store Store[] @relation("user-barber")
   created_At DateTime @default(now())

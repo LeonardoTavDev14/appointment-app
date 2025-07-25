@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
 
 import { FindEmailUserRepository } from "../../../infrastruture/repository/user/FindEmailUserRepository";
+import { LockAccountUserRepository } from "../../../infrastruture/repository/user/LockAccountUserRepository";
 import { CompareProvider } from "../../../shared/providers/bcrypt/compare/CompareProvider";
+import { SaveUserRepository } from "../../../infrastruture/repository/user/SaveUserRepository";
 import { TokenProvider } from "../../../shared/providers/tokens/jwt/TokenProvider";
 
 import { AuthUserUseCase } from "../../../application/usecases/user/AuthUserUseCase";
@@ -11,12 +13,16 @@ export class AuthUserController {
     const { email, password } = request.body;
 
     const findEmailUserRepository = new FindEmailUserRepository();
+    const lockAccountUserRepository = new LockAccountUserRepository();
     const compareProvider = new CompareProvider();
+    const saveUserRepository = new SaveUserRepository();
     const tokenProvider = new TokenProvider();
 
     const useCase = new AuthUserUseCase(
       findEmailUserRepository,
+      lockAccountUserRepository,
       compareProvider,
+      saveUserRepository,
       tokenProvider
     );
 

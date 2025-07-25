@@ -20,7 +20,9 @@ export class FindUserRepository implements IFindUserRepositories {
       userData.role,
       userData.id,
       userData.resetToken,
-      userData.resetExpiredToken
+      userData.resetExpiredToken,
+      userData.loginAttempt,
+      userData.lockAccount
     );
   }
 }

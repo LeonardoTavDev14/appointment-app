@@ -13,6 +13,8 @@ export class CreateUserRepository implements ICreateUserRepositories {
         role: user.role,
         resetToken: null,
         resetExpiredToken: null,
+        loginAttempt: 0,
+        lockAccount: null,
       },
     });
 
@@ -24,7 +26,9 @@ export class CreateUserRepository implements ICreateUserRepositories {
       created.role,
       created.id,
       created.resetToken,
-      created.resetExpiredToken
+      created.resetExpiredToken,
+      created.loginAttempt,
+      created.lockAccount
     );
   }
 }

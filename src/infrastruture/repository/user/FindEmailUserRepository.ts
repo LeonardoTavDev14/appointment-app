@@ -20,7 +20,9 @@ export class FindEmailUserRepository implements IFindEmailUserRepositories {
       user.role,
       user.id,
       user.resetToken,
-      user.resetExpiredToken
+      user.resetExpiredToken,
+      user.loginAttempt,
+      user.lockAccount
     );
   }
 }

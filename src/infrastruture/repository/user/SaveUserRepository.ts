@@ -10,6 +10,8 @@ export class SaveUserRepository implements ISaveUserRepositories {
         password: user.password,
         resetToken: user.resetToken,
         resetExpiredToken: user.resetExpiredToken,
+        loginAttempt: user.loginAttempt,
+        lockAccount: user.lockAccount,
       },
     });
   }

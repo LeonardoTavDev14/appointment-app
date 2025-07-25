@@ -9,6 +9,8 @@ export class User {
   public role: userRoles;
   public resetToken?: string | null;
   public resetExpiredToken?: Date | null;
+  public loginAttempt?: number | null;
+  public lockAccount?: Date | null;
 
   constructor(
     name: string,
@@ -18,7 +20,9 @@ export class User {
     role: userRoles,
     id?: string,
     resetToken?: string | null,
-    resetExpiredToken?: Date | null
+    resetExpiredToken?: Date | null,
+    loginAttempt?: number | null,
+    lockAccount?: Date | null
   ) {
     this.name = name;
     this.email = email;
@@ -30,6 +34,8 @@ export class User {
     if (resetToken !== undefined) this.resetToken = resetToken;
     if (resetExpiredToken !== undefined)
       this.resetExpiredToken = resetExpiredToken;
+    if (loginAttempt !== undefined) this.loginAttempt = loginAttempt;
+    if (lockAccount !== undefined) this.lockAccount = lockAccount;
   }
 
   static updateForm(existing: User, updates: Partial<User>): User {
@@ -54,7 +60,9 @@ export class User {
       existing.role,
       existing.id,
       updates.resetToken ?? existing.resetToken,
-      updates.resetExpiredToken ?? existing.resetExpiredToken
+      updates.resetExpiredToken ?? existing.resetExpiredToken,
+      existing.loginAttempt,
+      existing.lockAccount
     );
   }
 
@@ -67,6 +75,8 @@ export class User {
       existing.role,
       existing.id,
       null,
+      null,
+      0,
       null
     );
   }
@@ -80,7 +90,24 @@ export class User {
       newRole,
       existing.id,
       existing.resetToken,
-      existing.resetExpiredToken
+      existing.resetExpiredToken,
+      existing.loginAttempt,
+      existing.lockAccount
+    );
+  }
+
+  static updateLogin(existing: User, updates: Partial<User>): User {
+    return new User(
+      existing.name,
+      existing.email,
+      existing.password,
+      existing.age,
+      existing.role,
+      existing.id,
+      existing.resetToken,
+      existing.resetExpiredToken,
+      updates.loginAttempt ?? existing.loginAttempt,
+      updates.lockAccount ?? existing.lockAccount
     );
   }
 }
