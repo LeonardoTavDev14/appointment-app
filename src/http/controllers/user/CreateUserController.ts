@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import { FindEmailUserRepository } from "../../../infrastruture/repository/user/FindEmailUserRepository";
 import { HashProvider } from "../../../shared/providers/bcrypt/hash/HashProvider";
 import { CreateUserRepository } from "../../../infrastruture/repository/user/CreateUserRepository";
+import { CreateUserSendProvider } from "../../../shared/providers/mail/create-user/CreateUserSendProvider";
 
 import { CreateUserUseCase } from "../../../application/usecases/user/CreateUserUseCase";
 
@@ -12,11 +13,13 @@ export class CreateUserController {
 
     const findEmailUserRepository = new FindEmailUserRepository();
     const hashProvider = new HashProvider();
+    const createUserSendProvider = new CreateUserSendProvider();
     const createUserRepository = new CreateUserRepository();
 
     const useCase = new CreateUserUseCase(
       findEmailUserRepository,
       hashProvider,
+      createUserSendProvider,
       createUserRepository
     );
 

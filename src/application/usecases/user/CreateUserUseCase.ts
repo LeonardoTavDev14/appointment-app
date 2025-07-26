@@ -1,5 +1,6 @@
 import { IFindEmailUserRepositories } from "../../../domain/repositories/user/FindEmailUserRepositories";
 import { IHashProvider } from "../../../shared/providers/bcrypt/hash/IHashProvider";
+import { ICreateUserSendProvider } from "../../../shared/providers/mail/create-user/ICreateUserSendProvider";
 import { ICreateUserRepositories } from "../../../domain/repositories/user/CreateUserRepositories";
 import { ICreateUserDTO } from "../../dtos/user/CreateUserDto";
 import { User } from "../../../domain/entities/user/User";
@@ -8,6 +9,7 @@ export class CreateUserUseCase {
   constructor(
     private readonly findEmailUserRepository: IFindEmailUserRepositories,
     private readonly hashProvider: IHashProvider,
+    private readonly createUserSendProvider: ICreateUserSendProvider,
     private readonly createUserRepository: ICreateUserRepositories
   ) {}
 
@@ -29,6 +31,8 @@ export class CreateUserUseCase {
       data.age,
       "USER"
     );
+
+    await this.createUserSendProvider.send(data.name, data.email);
 
     return await this.createUserRepository.create(user);
   }
