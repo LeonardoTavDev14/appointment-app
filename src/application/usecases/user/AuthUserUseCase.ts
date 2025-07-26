@@ -80,6 +80,12 @@ export class AuthUserUseCase {
 
     await this.saveUserRepository.save(updated);
 
+    const token = await this.tokenProvider.generateToken({
+      role: userAlreadyExists.role,
+      id: userAlreadyExists.id as string,
+      name: userAlreadyExists.name,
+    });
+
     await this.deleteManyRefreshTokenRepository.deleteMany(
       userAlreadyExists.id as string
     );
@@ -88,22 +94,19 @@ export class AuthUserUseCase {
 
     const refreshToken = new RefreshToken(
       expiredIn,
-      userAlreadyExists.id as string
+      userAlreadyExists.id as string,
+      userAlreadyExists.name,
+      userAlreadyExists.role
     );
 
     const refresh = await this.createRefreshTokenRepository.create({
       expiredIn: refreshToken.expiredIn,
       userId: refreshToken.userId,
+      name: refreshToken.name,
+      roleUser: refreshToken.roleUser,
       id: refreshToken.id,
     });
 
-    const token = await this.tokenProvider.generateToken({
-      role: userAlreadyExists.role,
-      id: userAlreadyExists.id as string,
-      refresh_token: refresh,
-      name: userAlreadyExists.name,
-    });
-
-    return token;
+    return { token, refresh_token: refresh, name: userAlreadyExists.name };
   }
 }
