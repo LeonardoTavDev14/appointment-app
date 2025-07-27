@@ -1,47 +1,43 @@
 import { RefreshToken } from "../../../domain/entities/refresh-token/RefreshToken";
 import { IDeleteManyRefreshTokenRepositories } from "../../../domain/repositories/refresh-token/DeleteManyRefreshTokenRepositories";
-import { IFindRefreshTokenRepositories } from "../../../domain/repositories/refresh-token/FindRefreshTokenRepositories";
+import { IFindRefreshTokenUserIdRepositories } from "../../../domain/repositories/refresh-token/FindRefreshTokenUserIdRepositories";
 import { ITokenProvider } from "../../../shared/providers/tokens/jwt/ITokenProvider";
 import { IRefreshTokenDTO } from "../../dtos/refresh-token/RefreshTokenDto";
-import dayjs from "dayjs";
 import { IRefreshTokenResponseDTO } from "../../dtos/refresh-token/RefreshTokenResponseDto";
+import dayjs from "dayjs";
 
 export class RefreshTokenUseCase {
   constructor(
-    private readonly findRefreshTokenRepository: IFindRefreshTokenRepositories,
+    private readonly findRefreshTokenUserIdRepository: IFindRefreshTokenUserIdRepositories,
     private readonly tokenProvider: ITokenProvider,
     private readonly deleteManyRefreshTokenRepository: IDeleteManyRefreshTokenRepositories
   ) {}
 
   async execute(data: IRefreshTokenDTO): Promise<IRefreshTokenResponseDTO> {
-    const refreshToken = await this.findRefreshTokenRepository.find(
-      data.refresh_token
+    const refresh_token = await this.findRefreshTokenUserIdRepository.find(
+      data.userId
     );
 
-    if (!refreshToken) {
+    if (!refresh_token) {
       throw new Error("Refresh token invalid!");
     }
 
-    const refreshTokenExpired = dayjs().isAfter(refreshToken.expiredIn);
+    const refreshTokenExpired = dayjs().isAfter(refresh_token.expiredIn);
 
     const token = await this.tokenProvider.generateToken({
-      role: refreshToken.roleUser,
-      id: refreshToken.userId,
-      name: refreshToken.name,
+      role: refresh_token.roleUser,
+      id: refresh_token.userId,
     });
 
     if (refreshTokenExpired) {
-      await this.deleteManyRefreshTokenRepository.deleteMany(
-        refreshToken.userId
-      );
+      await this.deleteManyRefreshTokenRepository.deleteMany(data.userId);
 
       const expiredIn = dayjs().add(7, "day").toDate();
 
       const newRefreshToken = new RefreshToken(
         expiredIn,
-        refreshToken.userId,
-        refreshToken.name,
-        refreshToken.roleUser
+        refresh_token.userId,
+        refresh_token.roleUser
       );
 
       return { token, refreshToken: newRefreshToken };

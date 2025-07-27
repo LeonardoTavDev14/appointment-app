@@ -17,7 +17,6 @@ export class FindRefreshTokenRepository
     return new RefreshToken(
       refreshToken.expiredIn,
       refreshToken.userId,
-      refreshToken.name,
       refreshToken.roleUser,
       refreshToken.id
     );

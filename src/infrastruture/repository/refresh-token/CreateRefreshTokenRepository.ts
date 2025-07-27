@@ -9,7 +9,6 @@ export class CreateRefreshTokenRepository
     const created = await prismaClient.refreshToken.create({
       data: {
         expiredIn: refresh_token.expiredIn,
-        name: refresh_token.name,
         roleUser: refresh_token.roleUser,
         userId: refresh_token.userId,
       },
@@ -18,7 +17,6 @@ export class CreateRefreshTokenRepository
     return new RefreshToken(
       created.expiredIn,
       created.userId,
-      created.name,
       created.roleUser,
       created.id
     );
