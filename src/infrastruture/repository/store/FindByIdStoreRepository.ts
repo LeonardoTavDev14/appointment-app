@@ -1,28 +1,26 @@
 import { IFindbyIdStoreRepositories } from "../../../domain/repositories/store/FindbyIdStoreRepositories";
-import { Store } from "../../../domain/entities/store/Store";
+import { IStoreVisibleDTO } from "../../../domain/repositories/store/FindStoresRepositories";
 import { prismaClient } from "../../prisma/db";
 
 export class FindByIdStoreRepository implements IFindbyIdStoreRepositories {
-  async findById(id: string): Promise<Store | null> {
+  async findById(id: string): Promise<IStoreVisibleDTO | null> {
     const store = await prismaClient.store.findFirst({
       where: { id },
+      select: {
+        name: true,
+        businessFone: true,
+        cep: true,
+        address: true,
+        operation: true,
+        openingHours: true,
+        closingTime: true,
+      },
     });
 
     if (!store) {
       return null;
     }
 
-    return new Store(
-      store.name,
-      store.businessFone,
-      store.cep,
-      store.address,
-      store.operation,
-      store.openingHours,
-      store.closingTime,
-      store.userId,
-      store.cnpj,
-      store.id
-    );
+    return store;
   }
 }

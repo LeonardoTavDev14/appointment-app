@@ -11,7 +11,7 @@ export class TokenProvider implements ITokenProvider {
       process.env.JWT_SECRET as string,
       {
         subject: payloadToken.id,
-        expiresIn: 900000,
+        expiresIn: "15m",
       }
     );
 

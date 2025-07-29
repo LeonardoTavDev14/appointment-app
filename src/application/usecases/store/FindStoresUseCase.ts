@@ -9,7 +9,7 @@ export class FindStoresUseCase {
   async execute(): Promise<IStoreVisibleDTO[]> {
     const stores = await this.findStoresRepository.findMany();
 
-    if (!stores?.length || stores.length === 0) {
+    if (!stores || stores.length === 0) {
       throw new Error("No Stores found!");
     }
 
@@ -21,7 +21,6 @@ export class FindStoresUseCase {
       operation: store.operation,
       openingHours: store.openingHours,
       closingTime: store.closingTime,
-      cnpj: store.cnpj,
     }));
   }
 }

@@ -14,6 +14,7 @@ import { DeleteStoreUserController } from "../controllers/store/DeleteStoreUserC
 import { DeleteStoreAdminController } from "../controllers/store/DeleteStoreAdminController";
 import { FindStoresController } from "../controllers/store/FindStoresController";
 import { FindStoresOpenController } from "../controllers/store/FindStoresOpenController";
+import { FindStoresServicesController } from "../controllers/store/FindStoresServicesController";
 
 const routes = Router();
 
@@ -23,6 +24,7 @@ const deleteStoreUserController = new DeleteStoreUserController();
 const deleteStoreAdminController = new DeleteStoreAdminController();
 const findStoresController = new FindStoresController();
 const findStoresOpenController = new FindStoresOpenController();
+const findStoresServicesController = new FindStoresServicesController();
 
 routes.post(
   "/created",
@@ -34,6 +36,12 @@ routes.post(
 
 routes.get("/findmany", ensureAuthenticated, findStoresController.handle);
 routes.get("/findOpen", ensureAuthenticated, findStoresOpenController.handle);
+routes.get(
+  "/details/:id",
+  ensureAuthenticated,
+  ensureJoi(RequestParamsValidator, "params"),
+  findStoresServicesController.handle
+);
 
 routes.put(
   "/updated/:id",

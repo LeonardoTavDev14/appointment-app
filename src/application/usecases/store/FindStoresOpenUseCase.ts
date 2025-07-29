@@ -21,7 +21,6 @@ export class FindStoresOpenUseCase {
       operation: store.operation,
       openingHours: store.openingHours,
       closingTime: store.closingTime,
-      cnpj: store.cnpj,
     }));
   }
 }

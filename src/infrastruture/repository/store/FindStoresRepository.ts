@@ -15,7 +15,6 @@ export class FindStoresRepository implements IFindStoresRepositories {
         operation: true,
         openingHours: true,
         closingTime: true,
-        cnpj: true,
       },
     });
 

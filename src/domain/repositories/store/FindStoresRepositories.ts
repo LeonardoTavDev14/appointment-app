@@ -8,7 +8,6 @@ export interface IStoreVisibleDTO {
   operation: operationStatus;
   openingHours: string;
   closingTime: string;
-  cnpj?: string | null;
 }
 
 export interface IFindStoresRepositories {
