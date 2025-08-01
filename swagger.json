@@ -10,7 +10,8 @@
   },
   "servers": [
     {
-      "url": "http://localhost:3000/"
+      "url": "http://localhost:3000/",
+      "description": "Server for development testing"
     }
   ],
   "paths": {
@@ -56,6 +57,7 @@
         }
       }
     },
+
     "/auth/user/login": {
       "post": {
         "summary": "Sign in",
@@ -80,7 +82,33 @@
         },
         "responses": {
           "400": {
-            "description": "E-mail or password incorrect"
+            "content": {
+              "application/json": {
+                "examples": {
+                  "BlockedUser": {
+                    "summary": "User account is lock",
+                    "value": {
+                      "statusCode": 400,
+                      "message": "Your account has been blocked for consecutive failed attempts"
+                    }
+                  },
+                  "AccountLock": {
+                    "summary": "Account deactiveted",
+                    "value": {
+                      "statusCode": 400,
+                      "message": "Your account has been blocked. Please try again later"
+                    }
+                  },
+                  "FailedAttemptsSignUp": {
+                    "summary": "Invalid credentials",
+                    "value": {
+                      "statusCode": 400,
+                      "message": "E-mail or password incorrect!"
+                    }
+                  }
+                }
+              }
+            }
           },
           "200": {
             "description": "OK",
@@ -89,6 +117,230 @@
                 "schema": {
                   "type": "object",
                   "$ref": "#/components/schemas/UserLogin"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/auth/user/forgot-password": {
+      "post": {
+        "summary": "Forgot your password",
+        "description": "Endpoint to send an email to reset the user's password",
+        "tags": ["Users"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserForgotPassword"
+              },
+              "examples": {
+                "user": {
+                  "value": {
+                    "email": "usertwo@domain.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "FailedSendMail": {
+                    "summary": "Failed to send e-mail",
+                    "value": {
+                      "statusCode": 400,
+                      "message": "Failed to send e-mail to user request"
+                    }
+                  },
+                  "UnknownError": {
+                    "summary": "Unknown error detected",
+                    "value": {
+                      "statusCode": 400,
+                      "message": "Unknown error detected in application"
+                    }
+                  },
+                  "CredentialsIncorrect": {
+                    "summary": "Invalid credentials",
+                    "value": {
+                      "statusCode": 400,
+                      "message": "If the email is correct, we will send you a link to change your password"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "user": {
+                    "value": {
+                      "message": "If the email is correct, we will send you a link to change your password"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/auth/user/updated": {
+      "put": {
+        "summary": "Updated user infos",
+        "description": "Endpoint for updating user information",
+        "tags": ["Users"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdated"
+              },
+              "examples": {
+                "user": {
+                  "value": {
+                    "name": "user",
+                    "age": 21
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "UserNotFound": {
+                    "value": {
+                      "message": "Error: user not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "TokenInvalidOrExpired": {
+                    "value": {
+                      "message": "Error: token invalid or expired"
+                    }
+                  },
+                  "PayloadIncomplete": {
+                    "value": {
+                      "message": "Error: payload incomplete"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "TokenNotFound": {
+                    "value": {
+                      "message": "Token is missing"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "userUpdated": {
+                    "value": {
+                      "message": "Your information has been changed successfully"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/auth/user/reset-password/{token}": {
+      "put": {
+        "summary": "Reset password user",
+        "description": "Endpoint to reset user password",
+        "tags": ["Users"],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "description": "Token in URL path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserResetPassword"
+              },
+              "examples": {
+                "user": {
+                  "value": {
+                    "newPassword": "***********"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "TokenExpired": {
+                    "value": {
+                      "message": "Token invalid or expired"
+                    }
+                  },
+                  "SamePassword": {
+                    "value": {
+                      "message": "Your new password must not be the same as your current one"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "user": {
+                    "value": {
+                      "message": "Your password has been reset successfully!"
+                    }
+                  }
                 }
               }
             }
@@ -126,14 +378,41 @@
             "type": "string"
           }
         }
+      },
+      "UserForgotPassword": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "UserUpdated": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "age": {
+            "type": "number"
+          }
+        }
+      },
+      "UserResetPassword": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string"
+          }
+        }
       }
-    }
-  },
-  "securitySchemes": {
-    "bearerAuth": {
-      "type": "http",
-      "scheme": "Bearer",
-      "bearerFormat": "JWT"
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
     }
   }
 }

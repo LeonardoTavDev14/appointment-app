@@ -18,7 +18,7 @@ export const ensureAuthenticated = (
   const authHeader = request.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return response.status(401).json({ message: "Token is missing!" });
+    return response.status(403).json({ message: "Token is missing!" });
   }
 
   const token = authHeader.split(" ")[1];
