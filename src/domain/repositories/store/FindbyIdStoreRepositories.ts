@@ -1,5 +1,5 @@
-import { IStoreVisibleDTO } from "./FindStoresRepositories";
+import { Store } from "../../entities/store/Store";
 
 export interface IFindbyIdStoreRepositories {
-  findById(id: string): Promise<IStoreVisibleDTO | null>;
+  findById(storeId: string): Promise<Store | null>;
 }

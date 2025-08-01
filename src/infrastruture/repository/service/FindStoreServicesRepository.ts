@@ -1,4 +1,3 @@
-import { faTruckMedical } from "@fortawesome/free-solid-svg-icons";
 import {
   IFindStoreServiceRepositories,
   IServiceVisibleDTO,

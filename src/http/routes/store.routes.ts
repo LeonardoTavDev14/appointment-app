@@ -37,7 +37,7 @@ routes.post(
 routes.get("/findmany", ensureAuthenticated, findStoresController.handle);
 routes.get("/findOpen", ensureAuthenticated, findStoresOpenController.handle);
 routes.get(
-  "/details/:id",
+  "/info/:id",
   ensureAuthenticated,
   ensureJoi(RequestParamsValidator, "params"),
   findStoresServicesController.handle

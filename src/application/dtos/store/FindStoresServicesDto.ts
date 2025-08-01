@@ -1,3 +1,3 @@
 export interface IFindStoresServicesDTO {
-  storeId: string;
+  id: string;
 }

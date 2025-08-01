@@ -1,49 +1,67 @@
-import { IFindbyIdStoreRepositories } from "../../../domain/repositories/store/FindbyIdStoreRepositories";
+import { IFindStoreRepositories } from "../../../domain/repositories/store/FindStoreRepositories";
 import { IFindStoreServiceRepositories } from "../../../domain/repositories/service/FindStoreServicesRepositories";
+import { IFindbyIdStoreRepositories } from "../../../domain/repositories/store/FindbyIdStoreRepositories";
+import { IFindUserRepositories } from "../../../domain/repositories/user/FindUserRepositories";
+import { IFindUserBarberRepositories } from "../../../domain/repositories/user/FindUserBarberRepositories";
 import { IFindStoresServicesDTO } from "../../dtos/store/FindStoresServicesDto";
 import { IFindStoresServicesResponseDTO } from "../../dtos/store/FindStoresServicesResponseDto";
-import { Service } from "../../../domain/entities/service/Service";
 
 export class FindStoresServicesUseCase {
   constructor(
+    private readonly findStoreRepository: IFindStoreRepositories,
+    private readonly findStoreServiceRepository: IFindStoreServiceRepositories,
     private readonly findByIdStoreRepository: IFindbyIdStoreRepositories,
-    private readonly findStoreServiceRepository: IFindStoreServiceRepositories
+    private readonly findUserRepository: IFindUserRepositories,
+    private readonly findUserBarberRepository: IFindUserBarberRepositories
   ) {}
 
   async execute(
     data: IFindStoresServicesDTO
   ): Promise<IFindStoresServicesResponseDTO> {
-    const store = await this.findByIdStoreRepository.findById(data.storeId);
+    const store = await this.findStoreRepository.find(data.id);
 
     if (!store) {
       throw new Error("Store not found!");
     }
 
-    const storeServices = await this.findStoreServiceRepository.find(
-      data.storeId
-    );
+    const storeServices = await this.findStoreServiceRepository.find(data.id);
 
+    // IMPLEMENTAR RETORNO COM USERBARBER - DANDO ERRO ATUALMENTE!
     if (!storeServices || !storeServices.length) {
-      throw new Error("No services found!");
+      return { store, message: "No services found!" };
     }
 
-    if (store.operation !== "OPEN") {
-      throw new Error("The store is currently closed!");
+    const storeInfo = await this.findByIdStoreRepository.findById(data.id);
+
+    if (!storeInfo) {
+      throw new Error("Store infos not found!");
     }
 
-    const services = storeServices.map(
-      (service) =>
-        new Service(
-          service.typeService,
-          service.prices,
-          service.storeId,
-          service.observations
-        )
+    const user = await this.findUserRepository.findUser(
+      storeInfo.userId as string
     );
 
-    return {
-      store,
-      services,
-    };
+    if (!user) {
+      throw new Error("User barber not found!");
+    }
+
+    if (user.role !== "BARBER" || storeInfo.userId !== user.id) {
+      throw new Error("The store does not belong to this user!");
+    }
+
+    const userBarber = await this.findUserBarberRepository.find(user.id);
+
+    if (!userBarber || !userBarber.name || !userBarber.age) {
+      throw new Error("Unexpected error");
+    }
+
+    const services = storeServices.map((service) => ({
+      typeService: service.typeService,
+      prices: service.prices,
+      storeId: service.storeId,
+      observations: service.observations,
+    }));
+
+    return { store, services, userBarber };
   }
 }

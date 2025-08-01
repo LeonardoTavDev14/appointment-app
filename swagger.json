@@ -1,0 +1,139 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Cut Scheduling",
+    "description": "This API focuses on scheduling haircuts for multiple barbershops.",
+    "contact": {
+      "email": "leonardoarrais211@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/"
+    }
+  ],
+  "paths": {
+    "/auth/user/created": {
+      "post": {
+        "summary": "Sign up",
+        "description": "Endpoint responsible for creating a user.",
+        "tags": ["Users"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserCreated"
+              },
+              "examples": {
+                "user": {
+                  "value": {
+                    "name": "UserTwo",
+                    "email": "usertwo@domain.com",
+                    "password": "********",
+                    "age": 21
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Email already registered in the system"
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/UserCreated"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/user/login": {
+      "post": {
+        "summary": "Sign in",
+        "description": "Endpoint to log in with the user",
+        "tags": ["Users"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserLogin"
+              },
+              "examples": {
+                "user": {
+                  "value": {
+                    "email": "usertwo@domain.com",
+                    "password": "********"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "E-mail or password incorrect"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/UserLogin"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UserCreated": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "age": {
+            "type": "number"
+          }
+        }
+      },
+      "UserLogin": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "securitySchemes": {
+    "bearerAuth": {
+      "type": "http",
+      "scheme": "Bearer",
+      "bearerFormat": "JWT"
+    }
+  }
+}
